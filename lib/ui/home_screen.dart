@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_generator/models/task.dart';
 import 'package:schedule_generator/services/gemini_service.dart';
+import 'package:schedule_generator/ui/home_components/generate_button.dart';
 import 'package:schedule_generator/ui/home_components/task_input.dart';
+import 'package:schedule_generator/ui/home_components/task_list.dart';
 import 'package:schedule_generator/ui/result_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,7 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ResultScreen()),
+                    MaterialPageRoute(
+                      builder:
+                          (_) => ResultScreen(
+                            result:
+                                generatedResult ??
+                                "There is no result. try to generate another task",
+                          ),
+                    ),
                   );
                 },
                 child: Text("View result"),
@@ -70,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sectionColor = Colors.grey[100];
+    final sectionColor = Colors.lightBlueAccent;
     final sectionTitleStyle = TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
@@ -79,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Schedule generator"),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -118,13 +127,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text("Task List", style: sectionTitleStyle),
                     SizedBox(height: 12),
                     Expanded(
-                      child: Placeholder(), //TODO
+                      child: TaskList(tasks: tasks, onRemove: removeTask),
                     ),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 20),
+            GenerateButton(isLoading: isLoading, onPressed: generateSchedule),
           ],
         ),
       ),
